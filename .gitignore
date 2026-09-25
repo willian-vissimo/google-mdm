@@ -1,0 +1,11 @@
+client_secret_*.json
+oauth-client.json
+oauth-token.json
+token.json
+devices*.csv
+windows-maintenance/build/
+windows-maintenance/*.wixobj
+windows-maintenance/*.wixpdb
+windows-maintenance/*.log
+windows-maintenance/**/dist/
+windows-maintenance/**/*.log

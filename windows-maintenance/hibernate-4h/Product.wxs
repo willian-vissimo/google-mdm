@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product
+    Id="{30E5255A-F02C-4E89-B225-9EC590C10650}"
+    Name="Evino Hibernation 4 Hours"
+    Language="1033"
+    Version="1.0.0"
+    Manufacturer="Evino"
+    UpgradeCode="{F8BB97E4-00BC-4A81-8918-C49CA4865CD8}">
+
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of this product is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="CompanyFolder" Name="Evino">
+          <Directory Id="INSTALLFOLDER" Name="Hibernation 4 Hours" />
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="HibernationScripts" Guid="{7D64630B-4987-42C3-9F19-021CF62DB280}" Win64="yes">
+        <File Id="ApplyHibernationScript" Source="Apply-Hibernation.ps1" KeyPath="yes" />
+        <File Id="InstallHibernationScript" Source="Install-Hibernation.ps1" />
+        <File Id="UninstallHibernationScript" Source="Uninstall-Hibernation.ps1" />
+        <RegistryValue
+          Root="HKLM"
+          Key="Software\Policies\Microsoft\Power\PowerSettings\9D7815A6-7EE4-497E-8888-515A05F02364"
+          Name="ACSettingIndex"
+          Type="integer"
+          Value="14400" />
+        <RegistryValue
+          Root="HKLM"
+          Key="Software\Policies\Microsoft\Power\PowerSettings\9D7815A6-7EE4-497E-8888-515A05F02364"
+          Name="DCSettingIndex"
+          Type="integer"
+          Value="14400" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="MainFeature" Title="Evino Hibernation 4 Hours" Level="1">
+      <ComponentRef Id="HibernationScripts" />
+    </Feature>
+
+    <CustomAction
+      Id="InstallHibernation"
+      Directory="INSTALLFOLDER"
+      ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;Install-Hibernation.ps1&quot;"
+      Execute="deferred"
+      Return="check"
+      Impersonate="no" />
+    <CustomAction
+      Id="RemoveHibernation"
+      Directory="INSTALLFOLDER"
+      ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;Uninstall-Hibernation.ps1&quot;"
+      Execute="deferred"
+      Return="ignore"
+      Impersonate="no" />
+
+    <InstallExecuteSequence>
+      <Custom Action="InstallHibernation" After="InstallFiles">NOT Installed</Custom>
+      <Custom Action="RemoveHibernation" Before="RemoveFiles">REMOVE~=&quot;ALL&quot;</Custom>
+    </InstallExecuteSequence>
+  </Product>
+</Wix>

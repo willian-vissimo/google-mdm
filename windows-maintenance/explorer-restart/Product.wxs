@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product
+    Id="{EAE6D451-9055-4F80-B46F-75B758310A31}"
+    Name="Evino Explorer Restart Schedule"
+    Language="1033"
+    Version="1.0.0"
+    Manufacturer="Evino"
+    UpgradeCode="{EE807EE0-56D8-47D7-9A04-693F729EDBB3}">
+
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of this product is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="CompanyFolder" Name="Evino">
+          <Directory Id="INSTALLFOLDER" Name="Explorer Restart" />
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="ExplorerScripts" Guid="{E90930DB-6D41-425F-B481-600721056B75}" Win64="yes">
+        <File Id="RestartExplorerScript" Source="Restart-Explorer.ps1" KeyPath="yes" />
+        <File Id="RegisterUserTaskScript" Source="Register-UserTask.ps1" />
+        <File Id="UninstallTasksScript" Source="Uninstall-Tasks.ps1" />
+        <RegistryValue
+          Root="HKLM"
+          Key="Software\Microsoft\Windows\CurrentVersion\Run"
+          Name="EvinoExplorerRestart"
+          Type="string"
+          Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File &quot;[#RegisterUserTaskScript]&quot;" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="MainFeature" Title="Evino Explorer Restart Schedule" Level="1">
+      <ComponentRef Id="ExplorerScripts" />
+    </Feature>
+
+    <CustomAction
+      Id="RemoveScheduledTasks"
+      Directory="INSTALLFOLDER"
+      ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;Uninstall-Tasks.ps1&quot;"
+      Execute="deferred"
+      Return="ignore"
+      Impersonate="no" />
+
+    <InstallExecuteSequence>
+      <Custom Action="RemoveScheduledTasks" Before="RemoveFiles">REMOVE~=&quot;ALL&quot;</Custom>
+    </InstallExecuteSequence>
+  </Product>
+</Wix>
