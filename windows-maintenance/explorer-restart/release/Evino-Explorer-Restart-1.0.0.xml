@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MsiInstallJob id="{D7B2270F-F147-4D99-A750-3611B5D92D36}">
+  <Product Version="1.0.0">
+    <Download>
+      <ContentURLList>
+        <ContentURL>https://github.com/willian-vissimo/google-mdm/raw/refs/heads/main/windows-maintenance/explorer-restart/release/Evino-Explorer-Restart-1.0.0.msi</ContentURL>
+      </ContentURLList>
+    </Download>
+    <Validation>
+      <FileHash>0E07F122C56657128634ED44F78103CBAB26DA1441B93808C91D57E382F37643</FileHash>
+    </Validation>
+    <Enforcement>
+      <CommandLine>/qn /norestart</CommandLine>
+      <TimeOut>5</TimeOut>
+      <RetryCount>3</RetryCount>
+      <RetryInterval>5</RetryInterval>
+      <DownloadFromAad>0</DownloadFromAad>
+    </Enforcement>
+  </Product>
+</MsiInstallJob>

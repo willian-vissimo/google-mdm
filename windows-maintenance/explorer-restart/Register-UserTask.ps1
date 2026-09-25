@@ -1,13 +1,18 @@
+param(
+    [string]$UserSid
+)
+
 $ErrorActionPreference = "Stop"
 
 $installDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
 $powerShell = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
-$identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-$userName = $identity.Name
-$suffix = $identity.User.Value.Replace("-", "_")
+if (-not $UserSid) {
+    $UserSid = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+}
+$suffix = $UserSid.Replace("-", "_")
 
 $principal = New-ScheduledTaskPrincipal `
-    -UserId $userName `
+    -UserId $UserSid `
     -LogonType Interactive `
     -RunLevel Limited
 $settings = New-ScheduledTaskSettingsSet `

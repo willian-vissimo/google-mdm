@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product
-    Id="{EAE6D451-9055-4F80-B46F-75B758310A31}"
+    Id="{33236F03-630E-470A-994C-8AAD1EAD525C}"
     Name="Evino Explorer Restart Schedule"
     Language="1033"
-    Version="1.0.0"
+    Version="1.1.0"
     Manufacturer="Evino"
     UpgradeCode="{EE807EE0-56D8-47D7-9A04-693F729EDBB3}">
 
@@ -25,6 +25,7 @@
       <Component Id="ExplorerScripts" Guid="{E90930DB-6D41-425F-B481-600721056B75}" Win64="yes">
         <File Id="RestartExplorerScript" Source="Restart-Explorer.ps1" KeyPath="yes" />
         <File Id="RegisterUserTaskScript" Source="Register-UserTask.ps1" />
+        <File Id="RegisterActiveUserTasksScript" Source="Register-ActiveUserTasks.ps1" />
         <File Id="UninstallTasksScript" Source="Uninstall-Tasks.ps1" />
         <RegistryValue
           Root="HKLM"
@@ -40,6 +41,14 @@
     </Feature>
 
     <CustomAction
+      Id="RegisterActiveUserTasks"
+      Directory="INSTALLFOLDER"
+      ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File &quot;Register-ActiveUserTasks.ps1&quot;"
+      Execute="deferred"
+      Return="check"
+      Impersonate="no" />
+
+    <CustomAction
       Id="RemoveScheduledTasks"
       Directory="INSTALLFOLDER"
       ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;Uninstall-Tasks.ps1&quot;"
@@ -48,6 +57,7 @@
       Impersonate="no" />
 
     <InstallExecuteSequence>
+      <Custom Action="RegisterActiveUserTasks" After="InstallFiles">NOT REMOVE~=&quot;ALL&quot;</Custom>
       <Custom Action="RemoveScheduledTasks" Before="RemoveFiles">REMOVE~=&quot;ALL&quot;</Custom>
     </InstallExecuteSequence>
   </Product>

@@ -15,7 +15,7 @@ $release = Join-Path $PSScriptRoot "release"
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 New-Item -ItemType Directory -Path $release -Force | Out-Null
 $object = Join-Path $output "Product.wixobj"
-$msi = Join-Path $release "Evino-Explorer-Restart-1.0.0.msi"
+$msi = Join-Path $release "Evino-Explorer-Restart-1.1.0.msi"
 
 & (Join-Path $toolsDirectory "candle.exe") -nologo -arch x64 -out $object (Join-Path $PSScriptRoot "Product.wxs")
 if ($LASTEXITCODE -ne 0) { throw "candle.exe failed: $LASTEXITCODE" }
@@ -24,6 +24,6 @@ if ($LASTEXITCODE -ne 0) { throw "light.exe failed: $LASTEXITCODE" }
 
 [pscustomobject]@{
     File = $msi
-    ProductCode = "{EAE6D451-9055-4F80-B46F-75B758310A31}"
+    ProductCode = "{33236F03-630E-470A-994C-8AAD1EAD525C}"
     SHA256 = (Get-FileHash $msi -Algorithm SHA256).Hash
 }
