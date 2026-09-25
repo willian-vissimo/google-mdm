@@ -3,9 +3,11 @@ oauth-client.json
 oauth-token.json
 token.json
 devices*.csv
+__pycache__/
 windows-maintenance/build/
 windows-maintenance/*.wixobj
 windows-maintenance/*.wixpdb
 windows-maintenance/*.log
 windows-maintenance/**/dist/
 windows-maintenance/**/*.log
+windows-maintenance/**/*.wixpdb

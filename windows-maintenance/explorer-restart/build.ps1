@@ -11,13 +11,15 @@ if (-not (Test-Path (Join-Path $toolsDirectory "candle.exe"))) {
 }
 
 $output = Join-Path $PSScriptRoot "dist"
+$release = Join-Path $PSScriptRoot "release"
 New-Item -ItemType Directory -Path $output -Force | Out-Null
+New-Item -ItemType Directory -Path $release -Force | Out-Null
 $object = Join-Path $output "Product.wixobj"
-$msi = Join-Path $output "Evino-Explorer-Restart-1.0.0.msi"
+$msi = Join-Path $release "Evino-Explorer-Restart-1.0.0.msi"
 
 & (Join-Path $toolsDirectory "candle.exe") -nologo -arch x64 -out $object (Join-Path $PSScriptRoot "Product.wxs")
 if ($LASTEXITCODE -ne 0) { throw "candle.exe failed: $LASTEXITCODE" }
-& (Join-Path $toolsDirectory "light.exe") -nologo -out $msi $object
+& (Join-Path $toolsDirectory "light.exe") -nologo -spdb -out $msi $object
 if ($LASTEXITCODE -ne 0) { throw "light.exe failed: $LASTEXITCODE" }
 
 [pscustomobject]@{
